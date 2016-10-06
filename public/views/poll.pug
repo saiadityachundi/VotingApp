@@ -1,0 +1,10 @@
+doctype html
+html
+    head
+        title DashBoard Example 
+    body
+        -for(i=0;i<polls.length;i++)
+            | #{i+1}. #{polls[i].qu} #[br]
+            -for(j=0;j<polls[i].op.length;j++)
+                | #{polls[i].op[j].st}  votes: #{polls[i].op[j].vot}#[br]
+            | #[br]

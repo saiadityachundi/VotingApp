@@ -10,3 +10,10 @@ html
             -for(i=0;i<polls.length;i++)
                 -s="/poll/"+polls[i]._id.toString();
                 a(href=s) #{polls[i].qu} #[br] #[br]
+
+        h5
+            a(href="/addPoll") Create
+            | &nbsp; a new poll. &nbsp;
+            a(href="/account") Go
+            | &nbsp; to my account. &nbsp;
+            a(href="logout") Logout

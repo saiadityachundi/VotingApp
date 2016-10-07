@@ -8,7 +8,7 @@ html
             -for(j=0;j<polls[i].op.length;j++)
                 | #{polls[i].op[j].st} #[br] 
                 | #{polls[i].op[j].vot} &nbsp; &nbsp &nbsp; &nbsp;
-                a(href='/vote/'+id+'/'+op[j].st) Vote!   #[br]
+                a(href='/vote/'+id+'/'+polls[i].op[j].st) Vote!   #[br]
             | #[br]
 
         h5

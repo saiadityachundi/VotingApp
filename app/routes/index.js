@@ -112,12 +112,12 @@ module.exports=function(app, passport){
         });
     });
 
-    app.get('/vote/:id/:ind', function(req, res){
+    app.get('/vote/:id/:st', function(req, res){
         mongo.connect(muri, function(err, db){
             if(err)
                 throw err;
             else{
-                db.collection('polls').update({_id: mongo.ObjectId(req.params.id, "op.st": req.params.ind)}, {$set: {"op.$.vot" : {$inc: 1}}});
+                db.collection('polls').update({_id: mongo.ObjectId(req.params.id), op: {$elemMatch: {st: req.params.ind}}}, {$set: {"op.$.vot" : {$inc: 1}}});
                 res.redirect('/');
             }
         });

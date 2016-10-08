@@ -5,7 +5,6 @@ var session=require('express-session');
 var routes=require('./app/routes/index.js');
 var bodyParser=require('body-parser');
 
-require('dotenv').load();
 require('./app/config/passport.js')(passport);
 
 var app=express();

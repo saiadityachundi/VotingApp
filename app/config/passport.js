@@ -1,7 +1,7 @@
 var Strategy=require('passport-github').Strategy;
 var mongo=require('mongodb');
 
-var muri='mongodb://localhost:27017/localUsers';
+var muri=process.env.MONGO_URI;
 
 module.exports=function (passport){
 

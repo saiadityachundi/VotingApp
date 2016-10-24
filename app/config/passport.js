@@ -1,6 +1,8 @@
 var Strategy=require('passport-github').Strategy;
 var mongo=require('mongodb');
 
+require('dotenv').load();
+
 var muri=process.env.MONGO_URI;
 
 module.exports=function (passport){
@@ -38,7 +40,7 @@ module.exports=function (passport){
                             if(ar.length>0)
                                 return done(null, ar[0]);
                             else{
-                                db.collection('users').insert({id: profile.id, username: profile.username, name: profile.displayName, email: profile.emails[0].value, polls: []}, function(err, results){
+                                db.collection('users').insert({id: profile.id, username: profile.username, name: profile.displayName, /*email: profile.emails[0],*/ polls: []}, function(err, results){
                                     return done(err, results.ops[0]);
                                 });
                             }

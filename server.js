@@ -6,6 +6,7 @@ var routes=require('./app/routes/index.js');
 var bodyParser=require('body-parser');
 
 require('./app/config/passport.js')(passport);
+require('dotenv').load();
 
 var app=express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: 'penPineappleApplePen', resave: false, saveUninitialized: false}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static('public'));
 
 app.set('views', __dirname+'/public/views');
 app.set('view engine', 'pug');

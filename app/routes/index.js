@@ -1,5 +1,7 @@
 var mongo=require('mongodb');
 
+require('dotenv').load();
+
 var muri=process.env.MONGO_URI;
 
 module.exports=function(app, passport){
@@ -96,6 +98,7 @@ module.exports=function(app, passport){
         });
     });
 
+    /*
     app.get('/poll/:id', isauth, function(req, res){
         mongo.connect(muri, function(err, db){
             if(err)
@@ -112,6 +115,7 @@ module.exports=function(app, passport){
             }
         });
     });
+    */
 
     app.get('/vote/:id/:st', function(req, res){
         mongo.connect(muri, function(err, db){

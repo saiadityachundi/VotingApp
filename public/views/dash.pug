@@ -13,20 +13,15 @@ html
             div(class="row")
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}!!
-            div(class="row")
-                div(class="col-xs-12")
-                    div(class="row")
-
-
-
-
-
-
-        p Hello, #{name}!! #[br] #[br]
-            | Here are your polls: #[br] #[br]
+                    h4(class="text-center") Find your polls below #[em OR] &nbsp;
+                        a( href="/addPoll" style="color: white") Create
+                        | &nbsp; a new poll
+            h5(class="text-center") Here are your polls:
             -for(i=0;i<polls.length;i++)
-                -s="/poll/"+polls[i]._id.toString();
-                a(href=s) #{polls[i].qu} #[br] #[br]
+                div(class="row")
+                    div(class="col-xs-12" style="padding: 10px;")
+                        -s="/poll/"+polls[i]._id.toString();
+                        a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
 
         h5
             a(href="/addPoll") Create

@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        title DashBoard Example 
+    body
+        -for(i=0;i<polls.length;i++)
+            | #{polls[i].qu} #[br] #[br]
+            -for(j=0;j<polls[i].op.length;j++)
+                | #{polls[i].op[j].st} #[br] 
+                | Votes: #{polls[i].op[j].vot} &nbsp; &nbsp &nbsp; &nbsp;
+                a(href='/vote/'+id+'/'+polls[i].op[j].st) Vote!   #[br]
+            | #[br]
+
+        h5
+            a(href="/removePoll/"+id) Delete
+            | &nbsp; this poll

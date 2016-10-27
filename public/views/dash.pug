@@ -28,7 +28,16 @@ html
                             a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
 
             div(id="npol" style="display: none;")
-                h1(class="text-center") New Poll comes here!!!
+                div(class="row")
+                    form(action="" method="post")
+                        div(class="col-xs-12" style="margin: 20px;")
+                            input(type="text" name="qu" placeholder="Ex: What is your favourite color?" style="margin: auto; width: 50%; display: block;")
+                        div(class="col-xs-12" style="margin: 20px;")
+                            input(type="text" name="op1" placeholder="Ex: Blue" style="margin: auto; width: 50%; display: block;")
+                        div(class="col-xs-12" style="margin: 20px;")
+                            input(type="text" name="op2" placeholder="Ex: Green" style="margin: auto; width: 50%; display: block;")
+                        div(class="col-xs-12" style="margin: 20px;")
+                            input(type="submit" class="btn btn-primary" style="margin: auto; width: 30%; display: block;")
 
         h5
             a(href="/addPoll") Create

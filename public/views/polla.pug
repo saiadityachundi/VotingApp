@@ -12,9 +12,9 @@ html
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}
                     div(class="btn btn-success" id="hider" onclick="getElementsByClassName('hide1').style.visibility='hidden';" role="button" style="margin: auto; display: block; width: 10%;") Press me!!
-
-            -for(i=0;i<polls.length;i++)
-                div(class="row hide1")
+            
+            div(class="row hide1")
+                -for(i=0;i<polls.length;i++)
                     div(class="col-xs-12" style="padding: 10px;")
                         -s="/poll/"+polls[i]._id.toString();
                         a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
@@ -29,3 +29,11 @@ html
                                 input(type="radio" name="opt" id=((i+1).toString()) value=poll.op[i]) 
                                 | #{poll.op[i].st}
                     div(class="btn btn-success vote" role="button" style="margin: auto; display: block; width: 20%;") Vote
+
+        script.
+            var but=document.getElementById('hider');
+            but.addEventListener('click', function(){
+                Array.from(document.getElementsByClassName('hide1')).forEach(function(val){
+                    val.style.display='none';
+                });
+            });

@@ -13,15 +13,22 @@ html
             div(class="row")
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}!!
-                    h4(class="text-center") Find your polls below #[em OR] &nbsp;
-                        a( href="/addPoll" style="color: white") Create
-                        | &nbsp; a new poll
-            h5(class="text-center") Here are your polls:
-            -for(i=0;i<polls.length;i++)
-                div(class="row")
-                    div(class="col-xs-12" style="padding: 10px;")
-                        -s="/poll/"+polls[i]._id.toString();
-                        a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
+                    h4(class="text-center") Find your polls below or create a new poll
+                    div(class="col-xs-6")
+                        button(type="button" class="btn btn-success btn-lg" style="margin-left: auto; width: 30%; display: block;" id="bnpol") New Poll
+                    div(class="col-xs-6")
+                        button(type="button" class="btn btn-success btn-lg" style="margin-right: auto; width: 30%; display: block;" id="bmpol") My Polls
+
+            div(id="mpol")
+                h5(class="text-center") Here are your polls:
+                -for(i=0;i<polls.length;i++)
+                    div(class="row")
+                        div(class="col-xs-12" style="padding: 10px;")
+                            -s="/poll/"+polls[i]._id.toString();
+                            a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
+
+            div(id="npol" style="display: none;")
+                h1(class="text-center") New Poll comes here!!!
 
         h5
             a(href="/addPoll") Create
@@ -29,3 +36,19 @@ html
             a(href="/account") Go
             | &nbsp; to my account. &nbsp;
             a(href="logout") Logout
+
+        script.
+            var bnpol=document.getElementById('bnpol');
+            var bmpol=document.getElementById('bmpol');
+            var npol=document.getElementById('npol');
+            var mpol=document.getElementById('mpol');
+
+            bnpol.addEventListener('click', function(){
+                npol.style.display='';
+                mpol.style.display='none';
+            });
+
+            bmpol.addEventListener('click', function(){
+                npol.style.display='none';
+                mpol.style.display='';
+            });

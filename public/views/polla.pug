@@ -1,39 +1,85 @@
 doctype html
 html
     head
-        title DashBoard Example 
+        title DashBoard Example
+        script(src="//code.jquery.com/jquery-3.1.1.min.js")
         link( rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
         link( rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
         script( src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
         link(rel="stylesheet" href="/main.css" type="text/css")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js")
     body
         div(class="container-fluid")
             div(class="row")
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}
-                    div(class="btn btn-success" id="hider" onclick="getElementsByClassName('hide1').style.visibility='hidden';" role="button" style="margin: auto; display: block; width: 10%;") Press me!!
-            
-            div(class="row hide1")
-                -for(i=0;i<polls.length;i++)
-                    div(class="col-xs-12" style="padding: 10px;")
-                        -s="/poll/"+polls[i]._id.toString();
-                        a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
+                    div(style="text-align: center")
+                        a(class="btn btn-success btn-lg" style="margin-right: 10px; margin-bottom: 10px;" href="/") New Poll
+                        a(class="btn btn-success btn-lg" style="margin-left: 10px; margin-bottom: 10px;" href="/") My Polls
 
             div(class="row" id="hide2")
                 div(class="col-xs-4" style="padding: 30px;")
                     h2(class="text-left") #{poll.qu}
                 div(class="col-xs-4" style="padding: 30px;")
-                    -for(i=0;i<poll.op.length;i++)
-                        div(class="radio")
-                            label
-                                input(type="radio" name="opt" id=((i+1).toString()) value=poll.op[i]) 
-                                | #{poll.op[i].st}
-                    div(class="btn btn-success vote" role="button" style="margin: auto; display: block; width: 20%;") Vote
+                    form(action="", method="post")
+                        -for(i=0;i<poll.op.length;i++)
+                            div(class="radio")
+                                label
+                                    input(type="radio" name="opt" id=((i+1).toString()) value=poll.op[i].st)
+                                    | #{poll.op[i].st} &nbsp; votes: #{poll.op[i].vot}
+                        input(type="submit" class="btn btn-primary" role="button")
+
+                div(class="col-xs-4")
+                    canvas(id="myChart" style="width: 100%")
+
+        h5
+            a(href="/account") Go
+            | &nbsp; to my account. &nbsp;
+            a(href="logout") Logout
 
         script.
-            var but=document.getElementById('hider');
-            but.addEventListener('click', function(){
-                Array.from(document.getElementsByClassName('hide1')).forEach(function(val){
-                    val.style.display='none';
-                });
+            var spoll='!{JSON.stringify(poll)}';
+            var poll=JSON.parse(spoll);
+            var lbs=[];
+            var dt=[];
+            poll.op.forEach(function(val){
+                lbs.push(val.st);
+                dt.push(Number(val.vot));
+            });
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: lbs,
+                    datasets: [{
+                        label: '# of Votes',
+                        data: dt,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
             });

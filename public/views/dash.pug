@@ -4,6 +4,7 @@ doctype html
 html
     head
         title DashBoard Example
+        script(src="//code.jquery.com/jquery-3.1.1.min.js")
         link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
         link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
         script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
@@ -14,10 +15,9 @@ html
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}!!
                     h4(class="text-center") Find your polls below or create a new poll
-                    div(class="col-xs-6")
-                        button(type="button" class="btn btn-success btn-lg" style="margin-left: auto; width: 30%; display: block;" id="bnpol") New Poll
-                    div(class="col-xs-6")
-                        button(type="button" class="btn btn-success btn-lg" style="margin-right: auto; width: 30%; display: block;" id="bmpol") My Polls
+                    div(style="text-align: center;")
+                        button(type="button" class="btn btn-success btn-lg" style="margin-right: 10px; display: inline-block;" id="bnpol") New Poll
+                        button(type="button" class="btn btn-success btn-lg" style="margin-left: 10px; display: inline-block;" id="bmpol") My Polls
 
             div(id="mpol")
                 h5(class="text-center") Here are your polls:
@@ -44,8 +44,6 @@ html
                             input(type="submit" class="btn btn-primary" style="margin: auto; width: 30%; display: block;")
 
         h5
-            a(href="/addPoll") Create
-            | &nbsp; a new poll. &nbsp;
             a(href="/account") Go
             | &nbsp; to my account. &nbsp;
             a(href="logout") Logout

@@ -73,7 +73,6 @@ module.exports=function(app, passport){
     });
 
     app.post('/dash', isauth, function(req, res){
-        //var op=req.body.opt.split(';');
         
         var ob={
             qu: req.body.qu,
@@ -85,10 +84,6 @@ module.exports=function(app, passport){
             ob.op.push({st: req.body['op'+n], vot: 0});
             n++;
         }
-
-        /*op.forEach(function(val){
-            ob.op.push({st: val, vot: 0});
-        });*/
 
         mongo.connect(muri, function(err, db){
             if(err)
@@ -130,33 +125,6 @@ module.exports=function(app, passport){
         });
     });
 
-    /*
-    app.get('/poll/:id', isauth, function(req, res){
-        mongo.connect(muri, function(err, db){
-            if(err)
-                throw err;
-            else{
-                db.collection('polls').find({_id: mongo.ObjectId(req.params.id)}, {_id: false}).toArray(function(er, ar){
-                    if(er)
-                        throw er;
-                    else{
-                        if(ar.length>0)
-                        {
-                            db.collection('polls').find({}).toArray(function(er, polls){
-                                if(er)
-                                    throw er;
-                                else{
-                                }
-                                db.close();
-                            });
-                        }
-                    }
-                });
-            }
-        });
-    });
-    */
-    
     app.get('/poll/:id', function(req, res){
         mongo.connect(muri, function(err, db){
             if(err)
@@ -196,40 +164,6 @@ module.exports=function(app, passport){
                     if(err)
                         throw err;
                     res.send(JSON.stringify(result.value));
-                });
-            }
-        });
-    });
-
-    app.get('/pug', function(req, res){
-        res.render('pug', {obj: {name: 'ippo'}});
-    });
-
-    app.get('/addPoll', isauth, function(req, res){
-        res.render('addPoll');
-    });
-
-    app.post('/addPoll', isauth, function(req, res){
-        var op=req.body.opt.split(';');
-        var ob={
-            qu: req.body.qu,
-            op:[]
-        };
-        op.forEach(function(val){
-            ob.op.push({st: val, vot: 0});
-        });
-        mongo.connect(muri, function(err, db){
-            if(err)
-                throw err;
-            else{
-                db.collection('polls').insert(ob, function(err, results){
-                    if(err)
-                        throw err;
-                    else{
-                        var id=results.ops[0]._id;
-                        db.collection('users').update({id: req.user.id}, {$addToSet:{polls: id}});
-                        res.redirect('/');
-                    }
                 });
             }
         });

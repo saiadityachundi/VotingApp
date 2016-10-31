@@ -36,60 +36,104 @@ html
                 div(class="col-xs-3" style="padding: 30px;")
                     h2(class="text-left") #{poll.qu}
                 div(class="col-xs-3" style="padding: 30px;")
-                    form(action="", method="post")
+                    form(id="fom")
+                        -var i;
                         -for(i=0;i<poll.op.length;i++)
                             div(class="radio")
                                 label
                                     input(type="radio" name="opt" id=((i+1).toString()) value=poll.op[i].st)
-                                    | #{poll.op[i].st} &nbsp; votes: #{poll.op[i].vot}
-                        input(type="submit" class="btn btn-primary" role="button")
-
+                                    | #{poll.op[i].st} &nbsp;
+                        button(id="vot" type="button" class="btn btn-primary" role="button") Vote
                 div(class="col-xs-6")
                     canvas(id="myChart")
+    
+        script.
+            var myChart;
 
         script.
-            var spoll='!{JSON.stringify(poll)}';
-            var poll=JSON.parse(spoll);
-            var lbs=[];
-            var dt=[];
-            poll.op.forEach(function(val){
-                lbs.push(val.st);
-                dt.push(Number(val.vot));
-            });
-            var ctx = document.getElementById("myChart");
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: lbs,
-                    datasets: [{
-                        label: '# of Votes',
-                        data: dt,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:true
-                            }
+            function doChart(poll ){
+                //var spoll='!{JSON.stringify(poll)}';
+                //var poll=JSON.parse(spoll);
+                var lbs=[];
+                var dt=[];
+                poll.op.forEach(function(val){
+                    lbs.push(val.st);
+                    dt.push(Number(val.vot));
+                });
+                var ctx = document.getElementById("myChart");
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: lbs,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: dt,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
                         }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+
+        script.
+            doChart(JSON.parse('!{JSON.stringify(poll)}'));
+
+        script.
+            var pid="#{poll._id}";
+            var st='';
+            var n=1;
+            var cop = document.getElementById(n.toString());
+           var appUrl=window.location.origin;
+
+            var vot=document.getElementById('vot');
+            vot.addEventListener('click', function(){
+
+            st='';
+            n=1;
+            cop = document.getElementById(n.toString());
+            while(st=='' && cop){
+                if(cop.checked)
+                    st=cop.value;
+                n++;
+                cop=document.getElementById(n.toString());
+            }
+
+                var xmr=new XMLHttpRequest();
+                
+                xmr.onreadystatechange=function() {
+                    if(xmr.readyState===4 && xmr.status===200){
+                        console.log(xmr.response);
+                        var poll=JSON.parse(xmr.response);
+                        console.log(poll);
+                        myChart.destroy();
+                        doChart(poll);
                     }
                 }
+
+                xmr.open('GET', appUrl+'/vote/'+pid+'/'+st, true);
+                xmr.send();
             });

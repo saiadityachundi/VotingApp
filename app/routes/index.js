@@ -162,7 +162,7 @@ module.exports=function(app, passport){
             if(err)
                 throw err;
             else{
-                db.collection('polls').find({_id: mongo.ObjectId(req.params.id)}, {_id: false}).toArray(function(er, ar){
+                db.collection('polls').find({_id: mongo.ObjectId(req.params.id)}).toArray(function(er, ar){
                     if(er)
                         throw er;
                     else{
@@ -192,8 +192,11 @@ module.exports=function(app, passport){
             if(err)
                 throw err;
             else{
-                db.collection('polls').update({_id: mongo.ObjectId(req.params.id), op: {$elemMatch: {st: req.params.st}}}, {$inc: {"op.$.vot" : 1}});
-                res.redirect('/poll/'+req.params.id);
+                db.collection('polls').findAndModify({_id: mongo.ObjectId(req.params.id), op: {$elemMatch: {st: req.params.st}}},[], {$inc: {"op.$.vot" : 1}}, {new: true}, function(err, result){
+                    if(err)
+                        throw err;
+                    res.send(JSON.stringify(result.value));
+                });
             }
         });
     });

@@ -12,6 +12,12 @@ html
     body
         div(class="container-fluid")
             div(class="row")
+                div(class="col-xs-12")
+                    a(class="anc1" href='/logout') Logout
+                    a(class="anc1" href='/' style="float: left") Home
+                    a(class="anc1" href='/dash' style="float: left") Dashboard
+
+            div(class="row rowl")
                 div(class="col-xs-12 topClass")
                     h1(class="text-center") Hello, #{name}!!
                     h4(class="text-center") Find your polls below or create a new poll
@@ -24,13 +30,17 @@ html
                 -for(i=0;i<polls.length;i++)
                     div(class="row")
                         div(class="col-xs-12" style="padding: 10px;")
-                            -s="/poll/"+polls[i]._id.toString();
-                            a(class="btn btn-primary btn-lg" href=s role="button" style="margin: auto; width: 40%; display: block;") #{polls[i].qu}
+                            -var s="/poll/"+polls[i]._id.toString();
+                            -var rs="/removePoll/"+polls[i]._id.toString();
+                            div(style="text-align: center")
+                                a(class="btn btn-primary btn-lg" href=s role="button" style="display: inline-block; width: 50%") #{polls[i].qu}
+                                | &nbsp;
+                                a(class="btn btn-danger " href=rs role="button" ) Delete Poll
 
             div(id="npol" style="display: none;")
-                div(class="row")
-                    form(action="" method="post")
-                        div(class="form-group")
+                form(action="" method="post")
+                    div(class="form-group")
+                        div(class="row" id="nopt")
                             div(class="col-xs-12")
                                 label(for="qu" style="margin: auto; width: 50%; display: block;") Enter your question
                                 input(id="qu" class="form-control" type="text" name="qu" placeholder="Ex: What is your favourite color?" style="margin: auto; width: 50%; display: block;")
@@ -40,13 +50,25 @@ html
                             div(class="col-xs-12")
                                 label(for="op2" style="margin: auto; width: 50%; display: block;") Option 2
                                 input(id="op2" class="form-control" type="text" name="op2" placeholder="Ex: Green" style="margin: auto; width: 50%; display: block;")
-                        div(class="col-xs-12" style="padding: 10px;")
-                            input(type="submit" class="btn btn-primary" style="margin: auto; width: 30%; display: block;")
+                        div(class="row")
+                            div(class="col-xs-12" style="padding: 10px;")
+                                button(id="ado" type="button" class="btn btn-default" style="margin: auto; widht: 40%; display: block;") Add another option
+                                br
+                                input(type="submit" class="btn btn-primary" style="margin: auto; width: 30%; display: block;")
 
-        h5
-            a(href="/account") Go
-            | &nbsp; to my account. &nbsp;
-            a(href="logout") Logout
+        script.
+            var nb=3;
+
+        script.
+            var ado=document.getElementById('ado');
+            var nopt=document.getElementById('nopt');
+            ado.addEventListener('click', function(){
+                var md=document.createElement('div');
+                md.innerHTML='<div class="col-xs-12"><label for="op'+nb+'" style="margin: auto; width: 50%; display: block;"> Option '+nb+'</label><input id="op'+nb+'" class="form-control" type="text" name="op'+nb+'" style="margin: auto; width: 50%; display: block;"></div>';
+                while(md.firstChild)
+                    nopt.appendChild(md.firstChild);
+                nb++;
+            });
 
         script.
             var bnpol=document.getElementById('bnpol');
@@ -63,3 +85,16 @@ html
                 npol.style.display='none';
                 mpol.style.display='';
             });
+
+        script.
+            var npol=document.getElementById('npol');
+            var mpol=document.getElementById('mpol');
+            var qry="#{qry}";
+            if(qry==="n"){
+                mpol.style.display='none';
+                npol.style.display='';
+            }
+            if(qry==="m"){
+                mpol.style.display='';
+                npol.style.display='none';
+            }

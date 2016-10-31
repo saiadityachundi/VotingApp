@@ -2,4 +2,18 @@
     background-color: #43ACD9;
     padding-top: 20px;
     padding-bottom: 15px;
+    height: 200px;
+}
+
+.anc1 {
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    float: right;
+}
+
+.anc1:hover{
+    background-color: #555;
+    color: white;
+    text-decoration: none;
 }

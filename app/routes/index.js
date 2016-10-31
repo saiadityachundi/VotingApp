@@ -17,14 +17,28 @@ module.exports=function(app, passport){
     app.get('/auth/github', passport.authenticate('github'));
     app.get('/auth/github/callback',
         passport.authenticate('github', {failureRedirect: '/login'}),
-        function(req, res){ res.redirect('/');});
+        function(req, res){ res.redirect('/dash');});
     
     app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');
     });
 
-    app.get('/', isauth, function(req, res){
+    app.get('/', function(req, res){
+        var user=req.user;
+        mongo.connect(muri, function(err, db){
+            if(err)
+                throw err;
+            db.collection('polls').find().toArray(function(err, polls){
+                if(err)
+                    throw err;
+                res.render('home', {polls: polls, user: user});
+            });
+        });
+    });
+
+    app.get('/dash', isauth, function(req, res){
+        var qry=req.query.r;
         mongo.connect(muri, function(err, db){
             if(err)
                 throw err;
@@ -44,7 +58,7 @@ module.exports=function(app, passport){
                                     polls.push(docs[0]);
                                     ctr++;
                                     if(ctr==arr[0].polls.length){
-                                        res.render('dash', {name: arr[0].name, polls: polls});
+                                        res.render('dash', {name: arr[0].name, polls: polls, qry: qry});
                                     }
                                 });
                             });
@@ -58,7 +72,7 @@ module.exports=function(app, passport){
         });
     });
 
-    app.post('/', isauth, function(req, res){
+    app.post('/dash', isauth, function(req, res){
         //var op=req.body.opt.split(';');
         
         var ob={
@@ -66,8 +80,11 @@ module.exports=function(app, passport){
             op:[]
         };
 
-        ob.op.push({st: req.body.op1, vot: 0});
-        ob.op.push({st: req.body.op2, vot: 0});
+        var n=1;
+        while(req.body['op'+n]){
+            ob.op.push({st: req.body['op'+n], vot: 0});
+            n++;
+        }
 
         /*op.forEach(function(val){
             ob.op.push({st: val, vot: 0});
@@ -83,7 +100,7 @@ module.exports=function(app, passport){
                     else{
                         var id=results.ops[0]._id;
                         db.collection('users').update({id: req.user.id}, {$addToSet:{polls: id}});
-                        res.redirect('/');
+                        res.redirect('/dash');
                     }
                 });
             }
@@ -105,7 +122,7 @@ module.exports=function(app, passport){
                         else{
                             db.collection('users').update({id: arr[0].id}, {$pull: {polls: mongo.ObjectId(id)}});
                             db.collection('polls').remove({_id: mongo.ObjectId(id)});
-                            res.send('<html><body><h4>poll deleted...  <a href="/">Go</a> to home page.</h4><body></html>');
+                            res.redirect('/dash');
                         }
                     }
                 });
@@ -140,36 +157,18 @@ module.exports=function(app, passport){
     });
     */
     
-    app.get('/poll/:id', isauth, function(req, res){
+    app.get('/poll/:id', function(req, res){
         mongo.connect(muri, function(err, db){
             if(err)
                 throw err;
             else{
-                var polls;
-                db.collection('users').find({id: req.user.id}).toArray(function(err, arr){
-                    if(err)
-                        throw err;
+                db.collection('polls').find({_id: mongo.ObjectId(req.params.id)}, {_id: false}).toArray(function(er, ar){
+                    if(er)
+                        throw er;
                     else{
-                        var polls=[];
-                        var poll;
-                        var ctr=0;
-                        if(arr[0].polls.length){
-                            arr[0].polls.forEach(function(val ){
-                                db.collection('polls').find({_id: val}).toArray(function(err, docs){
-                                    if(err)
-                                        throw err;
-                                    if(req.params.id == val.toString())
-                                        poll=docs[0];
-                                    polls.push(docs[0]);
-                                    ctr++;
-                                    if(ctr==arr[0].polls.length){
-                                        res.render('polla', {name: req.user.name, poll: poll, polls: polls, id: req.user.id });
-                                    }
-                                });
-                            });
-                        }
-                        else{
-                            res.render('nopoll', {name: req.user.name});
+                        if(ar.length>0)
+                        {
+                            res.render('polla', {user: req.user, poll: ar[0]});
                         }
                     }
                 });

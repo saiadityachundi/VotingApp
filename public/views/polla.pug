@@ -11,16 +11,31 @@ html
     body
         div(class="container-fluid")
             div(class="row")
+                div(class="col-xs-12")
+                    -if(user)
+                        a(class="anc1" href="/logout") Logout
+                    -else
+                        a(class="anc1" href="/login") Login
+                    a(class="anc1" href="/" style="float: left") Home
+                    a(class="anc1" href="/dash" style="float: left") Dashboard
+
+            div(class="row rowl")
                 div(class="col-xs-12 topClass")
-                    h1(class="text-center") Hello, #{name}
-                    div(style="text-align: center")
-                        a(class="btn btn-success btn-lg" style="margin-right: 10px; margin-bottom: 10px;" href="/") New Poll
-                        a(class="btn btn-success btn-lg" style="margin-left: 10px; margin-bottom: 10px;" href="/") My Polls
+                    h1(class="text-center") Hello, &nbsp;
+                        -if(user)
+                            | #{user.name}
+                            br
+                            br
+                            div(style="text-align: center")
+                                a(class="btn btn-success btn-lg" style="margin-right: 10px; margin-bottom: 10px;" href="/dash?r=n") New Poll
+                                a(class="btn btn-success btn-lg" style="margin-left: 10px; margin-bottom: 10px;" href="/dash?r=m") My Polls
+                        -else
+                            | there!!
 
             div(class="row" id="hide2")
-                div(class="col-xs-4" style="padding: 30px;")
+                div(class="col-xs-3" style="padding: 30px;")
                     h2(class="text-left") #{poll.qu}
-                div(class="col-xs-4" style="padding: 30px;")
+                div(class="col-xs-3" style="padding: 30px;")
                     form(action="", method="post")
                         -for(i=0;i<poll.op.length;i++)
                             div(class="radio")
@@ -29,13 +44,8 @@ html
                                     | #{poll.op[i].st} &nbsp; votes: #{poll.op[i].vot}
                         input(type="submit" class="btn btn-primary" role="button")
 
-                div(class="col-xs-4")
-                    canvas(id="myChart" style="width: 100%")
-
-        h5
-            a(href="/account") Go
-            | &nbsp; to my account. &nbsp;
-            a(href="logout") Logout
+                div(class="col-xs-6")
+                    canvas(id="myChart")
 
         script.
             var spoll='!{JSON.stringify(poll)}';

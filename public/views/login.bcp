@@ -1,6 +1,0 @@
-doctype html
-html
-    head
-        title Login Page.
-    body
-        a(href = "/auth/github") Login with github
